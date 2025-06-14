@@ -7,7 +7,7 @@ Tags: os,linux,system
 Slug: proxy-on-rpm-ostree
 Authors: Alejandro Visiedo
 Summary: Make rpm-ostree works with our proxy could be not trivial.
-This article describe how I did (or what I missed).
+         This article describe how I did (or what I missed).
 Status: published
 ---
 # proxy on rpm-ostree
