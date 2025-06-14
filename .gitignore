@@ -1,2 +1,39 @@
-/__pycache__
-/output
+# Ignore by default
+**/*
+
+# Base directory
+!custom.mk
+!LICENSE
+!Makefile
+!pelicanconf.py
+!publishconf.py
+!README.md
+!requirements.txt
+!tasks.py
+!toolbox.sh
+
+# .github directories
+!.github
+!.github/**
+!.github/**/*
+
+# Blog contents
+!content
+!content/**
+!content/**/*
+
+# Scripts
+!scripts
+!scripts/**
+!scripts/**/*
+
+# Static contents
+!static
+!static/**
+!static/**/*
+
+# Templates submodules
+!templates
+!templates/**
+!templates/**/*
+
