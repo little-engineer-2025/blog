@@ -14,5 +14,7 @@ jobs:
       id-token: "write"
     with:
       settings: "publishconf.py"
+      requirements: "-r requirements.txt"
       theme: "https://github.com/gilsondev/pelican-clean-blog.git"
+      python: "3.13"
 
