@@ -26,8 +26,8 @@ LINKS = (('Pelican', 'https://getpelican.com/'),
 # Social widget
 SOCIAL = (
   ('github', 'https://github.com/avisiedo'),
-  ('gitlab', 'https://gitlab.com/avisiedo'),
-  ('envelope','mailto:alejandro.visiedo+spam@gmail.com'),
+  ('github', 'https://github.com/little-engineer-2025'),
+  ('envelope','mailto:learning.little.engineer.2025.1+spam@gmail.com'),
 )
 
 DEFAULT_PAGINATION = 10
