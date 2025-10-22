@@ -73,7 +73,6 @@ prompt_confirmation() {
 generate_new_article() {
   cat <<EOF
 ---
-# https://docs.getpelican.com/en/latest/content.html
 Title: ${ARTICLE_TITLE}
 Date: ${ARTICLE_DATE_CREATED}
 Modified: ${ARTICLE_DATE_MODIFIED}
