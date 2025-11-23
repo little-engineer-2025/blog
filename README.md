@@ -32,6 +32,24 @@ or try on my personal systems.
 
 - Create toolbox: `toolbox.sh create`
 
+**On time task - alternative**
+
+```sh
+cd ~/workspace
+toolbox create blog
+toolbox enter blog
+sudo dnf install make python3-pelican
+git clone https://github.com/little-engineer-2025/blog.git
+git submodule init
+git submodule update
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -U pip
+pip install -r requirements.txt
+make devserver
+# Go to http://127.0.0.1:8000
+``
+
 **Day to day**
 
 - Enter in the toolbox and activate the virtual environment:
