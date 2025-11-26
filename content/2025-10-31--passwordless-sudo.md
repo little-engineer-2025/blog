@@ -26,18 +26,18 @@ references.
   `mkdir ~/.config/Yubico`
 - Add the configuration line by: `pamu2fcfg --username=$USER > ~/.config/Yubico/u2f_keys`
 - Shrink permissions: `chmod 0400 ~/.config/Yubico/u2f_keys`
-- Copy u2f_keys to a the global location below by: `sudo cp -vf ~/.config/Yubico/u2f_keys /etc/u2f_mappings`
+- Copy u2f_keys to a the global location below by: `run0 cp -vf ~/.config/Yubico/u2f_keys /etc/u2f_mappings`
 
 ## Set up passwordless
 
 ```sh
-$ sudo authselect enable-feature with-pam-u2f
+$ run0 authselect enable-feature with-pam-u2f
 ```
 
 ## Set up 2FA
 
 ```sh
-$ sudo authselect enable-feature with-pam-u2f-2fa
+$ run0 authselect enable-feature with-pam-u2f-2fa
 ```
 
 ---
@@ -81,7 +81,7 @@ unset PUB_KEY EMAIL
 Tell git where to find the allowed signers:
 
 ```sh
-git config --global gpg.ssh.allowedSignersFile ~/.ssh/allowed_signers
+git config --global gpg.ssh.allowedSignersFile "~/.ssh/allowed_signers"
 ```
 
 ---
@@ -96,28 +96,28 @@ git config --global gpg.ssh.allowedSignersFile ~/.ssh/allowed_signers
 
 ```sh
 # Create /usr/local/bin/lockcomputer.sh
-cat <<EOF | sudo tee /usr/local/bin/lockcomputer.sh
+cat <<EOF | run0 tee /usr/local/bin/lockcomputer.sh
 #!/bin/sh
 
 # Inspired by: https://gist.github.com/jhass/070207e9d22b314d9992
 
 lockscreen() {
   for bus in /run/user/*/bus; do
-    uid=$(basename $(dirname $bus))
-    if [ $uid -ge 1000 ]; then
-      user=$(id -un $uid)
-      export DBUS_SESSION_BUS_ADDRESS=unix:path=$bus
-      if su -c 'dbus-send --session --dest=org.freedesktop.DBus --type=method_call --print-reply  /org/freedesktop/DBus org.freedesktop.DBus.ListNames' $user | grep org.gnome.ScreenSaver; then
-        su -c 'dbus-send --session --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock' $user
+    uid=\$(basename \$(dirname \$bus))
+    if [ \$uid -ge 1000 ]; then
+      user=\$(id -un \$uid)
+      export DBUS_SESSION_BUS_ADDRESS=unix:path=\$bus
+      if su -c 'dbus-send --session --dest=org.freedesktop.DBus --type=method_call --print-reply  /org/freedesktop/DBus org.freedesktop.DBus.ListNames' \$user | grep org.gnome.ScreenSaver; then
+        su -c 'dbus-send --session --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock' \$user
       fi
     fi
   done
 }
 
 disconnect-network() {
-  devices=$(nmcli --fields DEVICE,TYPE,STATE device status | grep ethernet | grep connected | awk '{ print $1 }')
-  for device in $devices; do
-    nmcli device down "$device"
+  devices=\$(nmcli --fields DEVICE,TYPE,STATE device status | grep ethernet | grep connected | awk '{ print \$1 }')
+  for device in \$devices; do
+    nmcli device down "\$device"
   done
 }
 
@@ -126,17 +126,17 @@ lockscreen
 EOF
 
 # Change permissions
-sudo chmod u+x /usr/local/bin/lockscreen.sh
+run0 chmod u+x /usr/local/bin/lockcomputer.sh
 
 # Check your ID_MODEL_ID and ID_VENDOR_ID by: lsusb
 
 # FIXME Add udev rule / be aware ID_MODEL_ID and ID_VENDOR_ID should match your device
-cat <<EOF | sudo tee /etc/udev/rules.d/20-yubico.rule
+cat <<EOF | run0 tee /etc/udev/rules.d/20-yubico.rule
 ACTION=="remove", ENV{ID_BUS}=="usb", ENV{ID_MODEL_ID}=="0407", ENV{ID_VENDOR_ID}=="1050", RUN+="/usr/local/bin/lockcomputer.sh"
 EOF
 ```
 
-- Reload udev rules by: `sudo udevadm control -R`
+- Reload udev rules by: `run0 udevadm control -R`
 
 ## Wrap up
 
