@@ -30,7 +30,7 @@ Secondly, I thought "well, maybe I have to indicate that information
 into the repo files". So I edited every `.repo` file at
 `/etc/yum.repos.d/*.repo` and I realoaded rpm-ostree by
 
-`sudo systemctl daemon-reload; sudo systemctl restart rpm-ostreed.service`
+`run0 systemctl daemon-reload; run0 systemctl restart rpm-ostreed.service`
 
 Even I tried to reboot, but still rpm-ostree was failing and the
 request didn't go through my proxy.
@@ -40,7 +40,7 @@ which was really helpful:
 
 https://github.com/coreos/rpm-ostree/issues/762#issuecomment-434256478
 
-I did the change by: `sudo systemctl edit --full rpm-ostreed.service`,
+I did the change by: `run0 systemctl edit --full rpm-ostreed.service`,
 and adding the change below:
 
 ```toml
@@ -48,14 +48,14 @@ and adding the change below:
 Environment="http_proxy=http://<ip-for-my-proxy>:<port>"
 ```
 
-I run `sudo systemctl daemon-reload; sudo systemctl restart rpm-ostreed.service`,
+I run `run0 systemctl daemon-reload; run0 systemctl restart rpm-ostreed.service`,
 but surprise, still not working! And I rebooted and nothing changed.
 
 ## Final change
 
 Finally, I realized that I could require another environment variable, and that
 was the key in case for it, so I added `HTTPS_PROXY` and I run
-`sudo systemctl daemon-reload; sudo systemctl restart rpm-ostreed.service` and
+`run0 systemctl daemon-reload; run0 systemctl restart rpm-ostreed.service` and
 finally, it started to work.
 
 ## Wrap up!
@@ -65,7 +65,7 @@ or other rpm-ostree based distribution, you will need to add manually the
 `http_proxy` and `HTTPS_PROXY` to the rpm-ostreed.service configuration.
 
 ```sh
-sudo systemctl edit --full rpm-ostreed.service
+run0 systemctl edit --full rpm-ostreed.service
 ```
 
 Add the environment variables:
@@ -79,13 +79,13 @@ Environment="HTTPS_PROXY=http://<ip-for-my-proxy>:<port>"
 Reload the configuration and restart the service by:
 
 ```sh
-sudo systemctl daemon-reload
-sudo systemctl restart rpm-ostreed.service
+run0 systemctl daemon-reload
+run0 systemctl restart rpm-ostreed.service
 ```
 
 And finally upgrade your system:
 
 ```sh
-sudo rpm-ostree upgrade
+run0 rpm-ostree upgrade
 ```
 

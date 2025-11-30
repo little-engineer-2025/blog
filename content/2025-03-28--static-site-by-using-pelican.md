@@ -28,6 +28,11 @@ I am using a fedora linux box, and the requirements
 in my environment where to install the below:
 
 ```sh
+# For fedora
+$ run0 dnf install -y python3-pelican python3-ghp-import make
+# For atomic distribution
+$ toolbox create pelican
+$ toolbox enter pelican
 $ sudo dnf install -y python3-pelican python3-ghp-import make
 ```
 

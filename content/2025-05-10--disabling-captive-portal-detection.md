@@ -36,7 +36,7 @@ reponse=OK
 interval=300
 ```
 
-And restarting network manager by: `sudo systemctl restart NetworkManager.service`
+And restarting network manager by: `run0 systemctl restart NetworkManager.service`
 
 ## MacOS
 
