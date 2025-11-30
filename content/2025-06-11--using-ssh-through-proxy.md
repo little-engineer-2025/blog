@@ -21,7 +21,7 @@ connection, so I can push my changes.
 It could be more solutions, but the one indicated here require `nc` tool
 installed in your system, and some changes to `~/.ssh/config` file.
 
-- Install `nc` in fedora by: `sudo dnf install -y nc`
+- Install `nc` in fedora by: `run0 dnf install -y nc`
 - Open `~/.ssh/config` and add the configuration below:
 
 ```raw

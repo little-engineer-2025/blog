@@ -26,8 +26,8 @@ the responses.
 I move from one system to another, I like to test things, and at the moment of
 trying this I was using an Asahi Linux with Arch Linux.
 
-- I installed ollama by: `sudo pacman -Sy extra/ollama`.
-- Start the systemd service by: `sudo systemctl start ollama.service`
+- I installed ollama by: `run0 pacman -Sy extra/ollama`.
+- Start the systemd service by: `run0 systemctl start ollama.service`
 
 And I searched for some model at: https://ollama.com/models
 
