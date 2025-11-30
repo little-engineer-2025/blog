@@ -1,7 +1,7 @@
 ---
 Title: Passwordless environment
 Date: 2025-10-31 1:00
-Modified: 2025-11-23 19:00
+Modified: 2025-11-30 21:00
 Category: security
 Tags: silverblue, yubico, gdm, ssh, login, fido2, passkey
 Slug: passwordless
@@ -138,6 +138,28 @@ EOF
 
 - Reload udev rules by: `run0 udevadm control -R`
 
+## Unlock LUKS using FIDO2
+
+I tried in a VM several configurations, and the one that fit well
+in terms of security and usability was the below one:
+
+```sh
+run0 systemd-cryptenroll \
+  --fido2-device=auto \
+  --fido2-with-client-pin=no \
+  --fido2-with-user-presence=yes \
+  --fido2-with-user-verification=yes \
+  /dev/sdX
+```
+
+> Update `/dev/sdX by your LUKS partition; `lsblk` should help you.
+
+Edit `/etc/crypttab` and add to your LUKS device entry: ` - fido2-device=auto`
+
+Reboot your system: `systemctl reboot` and now you should be
+able to unlock your LUKS partition using your FIDO2 device and
+touching it.
+
 ## Wrap up
 
 So far we set up our login, gdm, git commits and tags, and lockcomputer by
@@ -145,6 +167,8 @@ using our passwordkey token. This is a step forward to keep your environment
 safer.
 
 Stay tuned and see you on the next post!
+
+**UPDATE**: Added `Unlock LUKS using FIDO2` section.
 
 ## References
 
