@@ -162,9 +162,9 @@ touching it.
 
 ## Wrap up
 
-So far we set up our login, gdm, git commits and tags, and lockcomputer by
-using our passwordkey token. This is a step forward to keep your environment
-safer.
+So far we set up our login, gdm, git commits and tags, LUKS and lockcomputer
+on key extraction by using our passwordkey token. This is a step forward to
+keep your environment safer.
 
 Stay tuned and see you on the next post!
 
