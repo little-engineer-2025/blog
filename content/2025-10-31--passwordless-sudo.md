@@ -56,14 +56,14 @@ ssh-keygen -t ed25519-sk \
     -O resident \
     -O application=ssh:fedora \
     -O verify-required \
-    -f ~/.ssh/id_ed25519_sk_git_signing
+    -f ~/.ssh/id_ed25519_sk_rk_fedora
 ```
 
 Configure Git for SSH Signing:
 
 ```sh
 git config --global gpg.format ssh
-git config --global user.signingkey "~/.ssh/id_ed25519_sk_git_signing.pub"
+git config --global user.signingkey "~/.ssh/id_ed25519_sk_rk_fedora.pub"
 git config --global commit.gpgSign true
 git config --global tag.forceSignAnnotated true
 ```
@@ -73,7 +73,7 @@ Create and configure the allowed signers file.
 ```sh
 touch ~/.ssh/allowed_signers
 EMAIL="$(git config --global user.email)"
-PUB_KEY="$(cat ~/.ssh/id_ed25519_sk_git_signing.pub | awk '{ print $2 }')"
+PUB_KEY="$(cat ~/.ssh/id_ed25519_sk_rk_fedora.pub | awk '{ print $2 }')"
 printf '%s namespaces="git" ssh-ed25519 %s Git signing key %s\n' "${EMAIL}" "${PUB_KEY}" "${EMAIL}" >> ~/.ssh/allowed_signers
 unset PUB_KEY EMAIL
 ```
@@ -88,6 +88,28 @@ git config --global gpg.ssh.allowedSignersFile "~/.ssh/allowed_signers"
 
 > Don't forget to add your public key to yout github, gitlab or another
 > SCM where you push your commits.
+
+## Unlock LUKS using FIDO2
+
+I tried in a VM several configurations, and the one that fit well
+in terms of security and usability was the below one:
+
+```sh
+run0 systemd-cryptenroll \
+  --fido2-device=auto \
+  --fido2-with-client-pin=no \
+  --fido2-with-user-presence=yes \
+  --fido2-with-user-verification=yes \
+  /dev/sdX
+```
+
+> Update `/dev/sdX by your LUKS partition; `lsblk` should help you.
+
+Edit `/etc/crypttab` and add to your LUKS device entry: ` - fido2-device=auto`
+
+Reboot your system: `systemctl reboot` and now you should be
+able to unlock your LUKS partition using your FIDO2 device and
+touching it.
 
 ## Lock screen on extracting token
 
@@ -138,27 +160,17 @@ EOF
 
 - Reload udev rules by: `run0 udevadm control -R`
 
-## Unlock LUKS using FIDO2
+## Move key pair to another machine
 
-I tried in a VM several configurations, and the one that fit well
-in terms of security and usability was the below one:
+You could want to move the keys to use your FIDO2 device from one machine to
+other, for instance, if you want to log in by SSH from another machine. For
+making this, you will only need to recover the key pair from the FIDO2 device
+by running:
 
 ```sh
-run0 systemd-cryptenroll \
-  --fido2-device=auto \
-  --fido2-with-client-pin=no \
-  --fido2-with-user-presence=yes \
-  --fido2-with-user-verification=yes \
-  /dev/sdX
+cd ~/.ssh
+ssh-keygen -K
 ```
-
-> Update `/dev/sdX by your LUKS partition; `lsblk` should help you.
-
-Edit `/etc/crypttab` and add to your LUKS device entry: ` - fido2-device=auto`
-
-Reboot your system: `systemctl reboot` and now you should be
-able to unlock your LUKS partition using your FIDO2 device and
-touching it.
 
 ## Wrap up
 
