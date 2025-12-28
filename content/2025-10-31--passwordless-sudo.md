@@ -59,6 +59,25 @@ ssh-keygen -t ed25519-sk \
     -f ~/.ssh/id_ed25519_sk_rk_fedora
 ```
 
+- `-O resident` indicate to generate a resident key.
+- `-O application=ssh:fedora` set the application namespace associated to the
+  handler key. By default it is `ssh:`, and we need to prefix it always with
+  `ssh:` if we want to generate a different key for different purposes.
+- `-O verify-required` indicates to verify (by PIN or biometrics) the user
+  when the key is going to be used.
+
+OR (if you are moving your keys to another machine)
+
+```sh
+# The below will extract the resident key to use the private key stored
+# inside the crypto device (the private key never is disclosed from the
+# device). The below will extract all the resident keys (if you had
+# one tagged `ssh:` and another `ssh:fedora`, both redident keys would
+# be extracted.
+cd ~/.ssh
+ssh-keygen -K
+```
+
 Configure Git for SSH Signing:
 
 ```sh
@@ -100,10 +119,22 @@ run0 systemd-cryptenroll \
   --fido2-with-client-pin=no \
   --fido2-with-user-presence=yes \
   --fido2-with-user-verification=yes \
-  /dev/sdX
+  /dev/sdXY
 ```
 
-> Update `/dev/sdX by your LUKS partition; `lsblk` should help you.
+If you want to only unlock the disk by using your FIDO2 device you can remove
+the password slot with the following command:
+
+> WARNING: Before run this command, check you can boot and unlock LUKS by
+> using your FIDO2 device.
+
+```sh
+run0 systemd-cryptoenroll \
+    --wipe-slot=password \
+    /dev/sdXY
+```
+
+> Update `/dev/sdXY by your LUKS partition; `lsblk` should help you.
 
 Edit `/etc/crypttab` and add to your LUKS device entry: ` - fido2-device=auto`
 
@@ -159,18 +190,6 @@ EOF
 ```
 
 - Reload udev rules by: `run0 udevadm control -R`
-
-## Move key pair to another machine
-
-You could want to move the keys to use your FIDO2 device from one machine to
-other, for instance, if you want to log in by SSH from another machine. For
-making this, you will only need to recover the key pair from the FIDO2 device
-by running:
-
-```sh
-cd ~/.ssh
-ssh-keygen -K
-```
 
 ## Wrap up
 
