@@ -59,6 +59,25 @@ ssh-keygen -t ed25519-sk \
     -f ~/.ssh/id_ed25519_sk_rk_fedora
 ```
 
+- `-O resident` indicate to generate a resident key.
+- `-O application=ssh:fedora` set the application namespace associated to the
+  handler key. By default it is `ssh:`, and we need to prefix it always with
+  `ssh:` if we want to generate a different key for different purposes.
+- `-O verify-required` indicates to verify (by PIN or biometrics) the user
+  when the key is going to be used.
+
+OR (if you are moving your keys to another machine)
+
+```sh
+# The below will extract the resident key to use the private key stored
+# inside the crypto device (the private key never is disclosed from the
+# device). The below will extract all the resident keys (if you had
+# one tagged `ssh:` and another `ssh:fedora`, both redident keys would
+# be extracted.
+cd ~/.ssh
+ssh-keygen -K
+```
+
 Configure Git for SSH Signing:
 
 ```sh
