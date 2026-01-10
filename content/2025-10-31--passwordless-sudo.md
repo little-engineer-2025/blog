@@ -129,7 +129,7 @@ the password slot with the following command:
 > using your FIDO2 device.
 
 ```sh
-run0 systemd-cryptoenroll \
+run0 systemd-cryptenroll \
     --wipe-slot=password \
     /dev/sdXY
 ```
